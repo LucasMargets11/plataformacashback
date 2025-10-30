@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { post } from '../lib/api'
+import { setTokens, setUserEmail } from '../lib/auth'
 
 export default function LoginPage() {
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -16,8 +18,12 @@ export default function LoginPage() {
         if (!email || !password) return setError('Completá todos los campos.')
         setLoading(true)
         try {
-            await post('/api/auth/login', { email, password })
+            // Send both email and username for maximum compatibility with the auth endpoint
+            const data = await post<{ access: string; refresh: string }>('/api/auth/login', { email, username: email, password })
+            setTokens({ access: data.access, refresh: data.refresh })
+            setUserEmail(email)
             setSuccess(true)
+            navigate('/app/home', { replace: true })
         } catch (err: any) {
             setError(err?.message || 'Error al iniciar sesión')
         } finally {

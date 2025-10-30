@@ -125,7 +125,7 @@ export const Footer: React.FC = () => {
                             Cashback
                         </Link>
                         <p className="text-sm text-gray-600">
-                            © 2024 Cashback Platform. Todos los derechos reservados.
+                            © 2025 Vizion Cashback Platform. Todos los derechos reservados.
                         </p>
                     </div>
                 </div>

@@ -19,7 +19,8 @@ export default function SignupPage() {
         if (password !== confirm) return setError('Las contraseñas no coinciden.')
         setLoading(true)
         try {
-            await post('/api/auth/register', { email, password, role: 'CONSUMER' })
+            // API expects username; we default it to email on backend, but send explicitly for compatibility
+            await post('/api/auth/register', { email, username: email, password, role: 'CONSUMER' })
             setSuccess(true)
         } catch (err: any) {
             setError(err?.message || 'Error al registrarse')

@@ -1,18 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
+import BrandCarousel from '../components/BrandCarousel'
 
-// Brand logos data (placeholder brands)
-const brandLogos = [
-    { name: 'Nike', logo: '🏃‍♂️' },
-    { name: 'Adidas', logo: '👟' },
-    { name: 'Starbucks', logo: '☕' },
-    { name: 'Amazon', logo: '📦' },
-    { name: 'Apple', logo: '🍎' },
-    { name: 'McDonald\'s', logo: '🍔' },
-    { name: 'Walmart', logo: '🛒' },
-    { name: 'Target', logo: '🎯' },
-]
+// Brand logos are auto-detected as /public/brands/1..N.png; carousel will hide missing files.
 
 // How it works steps
 const steps = [
@@ -97,22 +88,27 @@ export default function IndexPage() {
                 </div>
             </section>
 
-            {/* Brand Logos Section */}
-            <section className="py-14 md:py-18 lg:py-24 bg-gray-50">
-                <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-10">
-                    <p className="text-center text-xs md:text-sm uppercase tracking-widest text-gray-500 font-medium mb-12">
+            {/* Brand Logos Section - Auto-scrolling carousel (full-bleed) */}
+            <section className="pt-8 md:pt-10 lg:pt-12 pb-6 md:pb-6 lg:pb-6 bg-blue-50 overflow-x-hidden">
+                {/* Eyebrow + Title within container */}
+                <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+                    <p className="text-center text-[11px] md:text-xs tracking-[0.12em] uppercase text-gray-500 font-semibold mb-2">
                         COMPRA EN TUS MARCAS FAVORITAS
                     </p>
-                    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 lg:gap-16">
-                        {brandLogos.map((brand, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center justify-center h-8 md:h-9 lg:h-10 text-gray-400 hover:text-gray-600 transition-colors duration-200 cursor-pointer text-2xl md:text-3xl"
-                                title={brand.name}
-                            >
-                                {brand.logo}
-                            </div>
-                        ))}
+                    <h3 className="text-2xl md:text-3xl font-bold text-center text-blue-900 mb-4 md:mb-5">
+                        Ganá cashback con más de 800 marcas
+                    </h3>
+                </div>
+                {/* Full-bleed carousel breaks out of container to touch page edges */}
+                <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] overflow-x-hidden">
+                    <BrandCarousel speedMs={28000} />
+                </div>
+                {/* CTA back inside container */}
+                <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+                    <div className="mt-2 text-center">
+                        <Link to="/for-consumers" className="inline-flex items-center text-blue-700 hover:text-blue-800 font-medium">
+                            Ver todas las marcas →
+                        </Link>
                     </div>
                 </div>
             </section>

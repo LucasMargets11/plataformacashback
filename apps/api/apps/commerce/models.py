@@ -12,11 +12,29 @@ class Merchant(models.Model):
         return self.name
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=140, unique=True)
+    participates_in_cashback = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Store(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name="stores")
     display_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True)
     qrcode_slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    logo_url = models.URLField(blank=True)
+    website_url = models.URLField(blank=True)
+    instagram_url = models.URLField(blank=True)
+    active = models.BooleanField(default=True)
+    categories = models.ManyToManyField(Category, related_name="stores", blank=True)
 
     def __str__(self) -> str:
         return f"{self.display_name}"

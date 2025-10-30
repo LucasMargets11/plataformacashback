@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
 
 from .serializers import RegisterSerializer
 
@@ -11,6 +12,17 @@ User = get_user_model()
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    # Accept optional email in addition to username
+    email = serializers.EmailField(required=False)
+
+    def validate(self, attrs):
+        # If username (the configured USERNAME_FIELD) wasn't provided but email was, map it
+        if not attrs.get(self.username_field):
+            email = self.initial_data.get("email")
+            if email:
+                attrs[self.username_field] = email
+        return super().validate(attrs)
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
