@@ -25,16 +25,16 @@ export const Header: React.FC = () => {
                 {/* Navigation - Desktop */}
                 <nav className="hidden lg:flex items-center space-x-8">
                     <Link to="/how-it-works" className="text-base text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                        How it Works
+                        Cómo funciona
                     </Link>
                     <Link to="/for-consumers" className="text-base text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                        For Consumers
+                        Consumidores
                     </Link>
                     <Link to="/for-teams" className="text-base text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                        For Teams
+                        Causas
                     </Link>
                     <Link to="/for-merchants" className="text-base text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                        For Merchants
+                        Comerciantes
                     </Link>
                 </nav>
 
