@@ -60,9 +60,9 @@ else:
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": os.getenv("POSTGRES_DB", "cashback"),
-            "USER": os.getenv("POSTGRES_USER", "cashback"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "cashback"),
-            "HOST": os.getenv("POSTGRES_HOST", "db"),
+            "USER": os.getenv("POSTGRES_USER", "postgres"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "margets999"),
+            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
             "PORT": os.getenv("POSTGRES_PORT", "5432"),
         }
     }
@@ -85,6 +85,19 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if o.strip()]
+# Fallback seguro para desarrollo: si no se definió CORS_ALLOWED_ORIGINS por env, permite Vite local
+if DEBUG and not CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+
+# Si necesitás CSRF para vistas con sesión, confiá explícitamente en el origen del dev server
+CSRF_TRUSTED_ORIGINS = [
+    o.replace("http://", "http://") for o in CORS_ALLOWED_ORIGINS
+] + [
+    o.replace("http://", "https://") for o in CORS_ALLOWED_ORIGINS
+]
 
 LANGUAGE_CODE = "es"
 TIME_ZONE = "UTC"
