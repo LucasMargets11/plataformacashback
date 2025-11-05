@@ -13,10 +13,13 @@ import StoresPage from './pages/stores/StoresPage'
 import HomePage from './pages/home/HomePage'
 import CauseDetailPage from './pages/causes/CauseDetailPage'
 import PublicLayout from './layouts/PublicLayout'
+import ScrollToTop from './components/ScrollToTop'
 
 export default function App() {
     return (
         <BrowserRouter>
+            {/* Ensure each navigation starts at top */}
+            <ScrollToTop />
             <Routes>
                 {/* Public area with public header/footer */}
                 <Route element={<PublicLayout />}>

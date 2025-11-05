@@ -13,7 +13,7 @@ export default function ForTeamsPage() {
                         <span className="text-blue-600">sin esfuerzo</span>
                     </h1>
                     <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
-                        Transforma las compras diarias de tu comunidad en fondos para tu equipo. Cada compra de tus miembros se convierte automáticamente en una donación para tu causa.
+                        Transforma las compras diarias de tu comunidad en fondos para tu causa. Cada compra se convierte automáticamente en una donación para tu causa.
                     </p>
                     <Link to="/signup?role=team">
                         <Button className="h-12 px-8 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-3xl">
