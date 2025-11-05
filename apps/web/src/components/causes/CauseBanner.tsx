@@ -32,7 +32,8 @@ const CauseBanner: React.FC<Props> = ({ cause }) => {
             {cause.description}
           </p>
         )}
-        <div className="mt-3 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 pointer-events-auto md:pointer-events-none md:group-hover:pointer-events-auto">
+        {/* CTAs: aparecen con hover sin mover layout. Visibles en mobile por accesibilidad */}
+        <div className="mt-3 flex gap-2 transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
           <Button onClick={goDetail} aria-label={`Ver causa ${cause.name}`}>Ver causa</Button>
           <Button variant="secondary" onClick={goStores} aria-label={`Ver comercios asociados a ${cause.name}`}>Comercios asociados</Button>
         </div>

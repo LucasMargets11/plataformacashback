@@ -2,27 +2,27 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import BrandCarousel from '../components/BrandCarousel'
+import { HeartHandshake, ShoppingBag, Coins, LineChart } from "lucide-react";
 
-// Brand logos are auto-detected as /public/brands/1..N.png; carousel will hide missing files.
 
-// How it works steps
-const steps = [
-    {
-        icon: '💳',
-        title: '1. Conecta tu cuenta',
-        description: 'Vincula de forma segura tu tarjeta de débito o crédito. Es rápido, fácil y seguro.',
-    },
-    {
-        icon: '🛍️',
-        title: '2. Compra en tiendas',
-        description: 'Usa tu tarjeta vinculada en cientos de marcas y tiendas locales que ya conoces y amás.',
-    },
-    {
-        icon: '🏆',
-        title: '3. Gana Cashback',
-        description: 'Recibe cashback automáticamente para tu causa y apoya a tu equipo sin esfuerzo.',
-    },
-]
+export const steps = [
+  {
+    title: "Elegí tu causa",
+    desc: "Seleccioná la causa que querés apoyar: educación, salud, ambiente u otra.",
+    icon: HeartHandshake,
+  },
+  {
+    title: "Comprá donde siempre",
+    desc: "Hacé tus compras en tus tiendas de siempre, online o en tienda física.",
+    icon: ShoppingBag,
+  },
+  {
+    title: "Cashback para la causa",
+    desc: "El cashback de tus compras se acredita a la causa que elegiste, no a tu bolsillo.",
+    icon: Coins,
+  },
+  
+];
 
 // Audience blocks
 const audienceBlocks = [
@@ -125,12 +125,12 @@ export default function IndexPage() {
                                 key={index}
                                 className="text-center p-6 md:p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-lg transition-all duration-200"
                             >
-                                <div className="text-6xl mb-6">{step.icon}</div>
+                                <div className="text-6xl mb-6"><step.icon /></div>
                                 <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 leading-[1.25]">
                                     {step.title}
                                 </h3>
                                 <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                                    {step.description}
+                                    {step.desc}
                                 </p>
                             </div>
                         ))}
