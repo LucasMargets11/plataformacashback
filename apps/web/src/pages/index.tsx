@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import BrandCarousel from '../components/BrandCarousel'
+import FeaturedCauses from '../features/causes/components/FeaturedCauses'
 import { HeartHandshake, ShoppingBag, Coins, LineChart } from "lucide-react";
 
 
@@ -68,50 +69,65 @@ const testimonials = [
 export default function IndexPage() {
     return (
         <div className="bg-white">
-            {/* Hero Section */}
-            <section className="pt-14 pb-20 md:pt-16 md:pb-24 lg:pt-20 lg:pb-28">
-                <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-10 text-center">
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
-                        Ganen fondos comprando<br />
-                        <span className="text-blue-600">donde ya compran</span>
-                    </h1>
-                    <p className="mt-8 text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                        La forma más fácil para que los equipos recauden dinero y los compradores obtengan un reembolso, simplemente comprando en sus tiendas favoritas.
-                    </p>
-                    <div className="mt-6">
-                        <Link to="/signup">
-                            <Button className="h-12 px-7 md:px-8 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-3xl transition-all duration-200 hover:shadow-lg">
-                                Crear cuenta
-                            </Button>
-                        </Link>
+            {/* Hero full-screen with header overlay */}
+            <section className="relative -mt-16 min-h-screen flex items-center bg-[linear-gradient(160deg,#0A2236_0%,#0F2E48_100%)] text-white">
+                <div className="mx-auto max-w-7xl w-full px-6 pt-24 pb-12">
+                    <div className="max-w-5xl text-left">
+                        <h1
+                            className="
+                                text-white font-extrabold tracking-tight leading-[1.05]
+                                text-[clamp(24px,5.5vw,56px)]
+                            "
+                        >
+                            <span className="block whitespace-nowrap">Comprás como siempre.</span>
+                            <span className="block whitespace-nowrap">Ayudás a la causa que elegís.</span>
+                        </h1>
+                        <p className="mt-4 text-white/85 max-w-xl">
+                            Sumá impacto social con tus compras de todos los días. Elegí tu causa y convertí el cashback en donaciones.
+                        </p>
+                            <div className="mt-8 flex flex-wrap items-center gap-3 justify-start">
+                                <Link to="/signup">
+                                    <Button className="inline-flex items-center rounded-lg px-5 py-3">
+                                        Crear cuenta
+                                    </Button>
+                                </Link>
+                                <Link to="/causas">
+                                    <Button className="inline-flex items-center rounded-lg px-5 py-3">
+                                        Ver causas
+                                    </Button>
+                                </Link>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Brand Logos Section - Auto-scrolling carousel (full-bleed) */}
-            <section className="pt-8 md:pt-10 lg:pt-12 pb-6 md:pb-6 lg:pb-6 bg-blue-50 overflow-x-hidden">
+            <section className="pt-8 md:pt-10 lg:pt-12 pb-6 md:pb-6 lg:pb-6 bg-[color:var(--sky-50)] overflow-x-hidden">
                 {/* Eyebrow + Title within container */}
                 <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-                    <p className="text-center text-[11px] md:text-xs tracking-[0.12em] uppercase text-gray-500 font-semibold mb-2">
+                    <p className="text-center text-[11px] md:text-xs tracking-[0.12em] uppercase text-brand-gray-500 font-semibold mb-2">
                         COMPRA EN TUS MARCAS FAVORITAS
                     </p>
-                    <h3 className="text-2xl md:text-3xl font-bold text-center text-blue-900 mb-4 md:mb-5">
+                    <h3 className="text-2xl md:text-3xl font-bold text-center text-brand-navy-900 mb-4 md:mb-5">
                         Ganá cashback con más de 800 marcas
                     </h3>
                 </div>
                 {/* Full-bleed carousel breaks out of container to touch page edges */}
-                <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] overflow-x-hidden">
+                    <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] overflow-x-hidden bg-[color:var(--sky-50)]">
                     <BrandCarousel speedMs={28000} />
                 </div>
                 {/* CTA back inside container */}
                 <div className="max-w-[1280px] mx-auto px-6 md:px-8">
                     <div className="mt-2 text-center">
-                        <Link to="/for-consumers" className="inline-flex items-center text-blue-700 hover:text-blue-800 font-medium">
+                        <Link to="/for-consumers" className="inline-flex items-center text-brand-blue-600 hover:text-brand-blue-700 font-medium">
                             Ver todas las marcas →
                         </Link>
                     </div>
                 </div>
             </section>
+
+            {/* Featured Causes under the brands carousel */}
+            <FeaturedCauses limit={6} title="Causas destacadas" />
 
             {/* How it Works Section */}
             <section className="py-14 md:py-18 lg:py-24">
@@ -139,27 +155,14 @@ export default function IndexPage() {
             </section>
 
             {/* Audience Blocks Section */}
-            <section className="py-14 md:py-18 lg:py-24 bg-gray-50">
+            <section className="py-14 md:py-18 lg:py-24 bg-[color:var(--sky-50)]">
                 <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         {audienceBlocks.map((block, index) => (
-                            <div
-                                key={index}
-                                className="bg-white border border-gray-200 rounded-2xl p-7 md:p-8 hover:shadow-lg transition-all duration-200 group"
-                            >
-                                <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 leading-[1.25]">
-                                    {block.title}
-                                </h3>
-                                <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-6">
-                                    {block.description}
-                                </p>
-                                <Link
-                                    to={block.link}
-                                    className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium group-hover:underline transition-colors duration-200"
-                                >
-                                    Aprender más
-                                    <span className="ml-1">→</span>
-                                </Link>
+                            <div key={index} className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 hover:shadow-md transition-colors duration-200 group">
+                                <h3 className="text-xl md:text-2xl font-semibold text-brand-navy-900 mb-4 leading-[1.25]">{block.title}</h3>
+                                <p className="text-base md:text-lg text-brand-gray-500 leading-relaxed mb-6">{block.description}</p>
+                                <Link to={block.link} className="inline-flex items-center text-brand-blue-600 hover:text-brand-blue-700 font-medium group-hover:underline transition-colors duration-200">Aprender más<span className="ml-1">→</span></Link>
                             </div>
                         ))}
                     </div>

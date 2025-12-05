@@ -1,0 +1,29 @@
+:root{
+  --navy-900:#0A2236;
+  --navy-800:#0F2E48;
+  --blue-600:#2E6CF6;
+  --blue-700:#2154CC;
+  --sky-50:#F5F8FF;
+  --gray-700:#1F2937;
+  --gray-500:#6B7280;
+  --lime-400:#A3E635;
+  --white:#FFFFFF;
+}
+
+/* Utility aliases for tailwind where needed */
+.brand-navy-900 { background-color: var(--navy-900); }
+.brand-navy-800 { background-color: var(--navy-800); }
+.brand-blue-600 { background-color: var(--blue-600); }
+.brand-blue-700 { background-color: var(--blue-700); }
+.brand-sky-50 { background-color: var(--sky-50); }
+.brand-gray-700 { color: var(--gray-700); }
+.brand-gray-500 { color: var(--gray-500); }
+.brand-lime-400 { background-color: var(--lime-400); }
+
+/* Small helper for footer top stripe */
+.footer-top-stripe::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background-color: var(--blue-600);
+}

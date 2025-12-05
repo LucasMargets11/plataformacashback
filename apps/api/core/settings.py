@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "apps.accounts",
     "apps.commerce",
     "apps.cashback",
+    "apps.causes",
 ]
 
 MIDDLEWARE = [

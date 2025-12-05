@@ -24,7 +24,7 @@ const BrandCard: React.FC<{ brand: Brand }> = ({ brand }) => {
         <img
           src={brand.src}
           alt={brand.name}
-          className="max-h-14 md:max-h-20 lg:max-h-24 w-auto object-contain filter grayscale opacity-80"
+          className="max-h-14 md:max-h-20 lg:max-h-24 w-auto object-contain filter grayscale opacity-80 group-hover:filter-none group-hover:grayscale-0 transition-all duration-200"
           loading="lazy"
           draggable={false}
         />
@@ -44,8 +44,8 @@ export const BrandStrip: React.FC<BrandStripProps> = ({ brands, className = '' }
       {/* Mobile: horizontal scroll with snap */}
       <div className="md:hidden relative">
         {/* fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-blue-50 to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-blue-50 to-transparent" />
+  <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[color:var(--sky-50)] to-transparent" />
+  <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[color:var(--sky-50)] to-transparent" />
 
         <div className="-mx-6 px-6 overflow-x-auto snap-x snap-mandatory flex gap-4">
           {brands.map((b, i) => (

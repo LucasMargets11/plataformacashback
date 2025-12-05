@@ -33,7 +33,7 @@ const BrandCard: React.FC<{ index: number; src: string }> = ({ index, src }) => 
       tabIndex={0}
     >
       {/* Filter group to include both logo and caption under same grayscale/opacity */}
-      <div className="flex flex-col items-center justify-center w-full filter grayscale opacity-80">
+  <div className="flex flex-col items-center justify-center w-full filter grayscale opacity-80 group-hover:grayscale-0 group-hover:filter-none transition-all duration-200">
         <img
           src={src}
           alt={name}
@@ -42,7 +42,7 @@ const BrandCard: React.FC<{ index: number; src: string }> = ({ index, src }) => 
           draggable={false}
           onError={() => setVisible(false)}
         />
-        <div className="text-xs md:text-sm text-center mt-2">
+        <div className="text-xs md:text-sm text-center mt-2 text-brand-gray-700">
           {promise}
         </div>
       </div>
@@ -129,8 +129,8 @@ export const BrandCarousel: React.FC<BrandCarouselProps> = ({ count = 24, speedM
   return (
     <div className={`relative w-full overflow-hidden select-none ${className}`} ref={wrapperRef}>
       {/* fading edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-blue-50 to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-blue-50 to-transparent" />
+  <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[color:var(--sky-50)] to-transparent" />
+  <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[color:var(--sky-50)] to-transparent" />
 
       {/* Two consecutive tracks inside a single moving container */}
       <div className="overflow-hidden">

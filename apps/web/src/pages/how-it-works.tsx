@@ -5,9 +5,9 @@ import { Button } from '../components/ui/Button'
 export default function HowItWorksPage() {
     return (
         <div className="bg-white">
-            {/* Hero Section */}
-            <section className="pt-20 pb-16 md:pt-24 md:pb-20 lg:pt-28 lg:pb-24">
-                <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-10 text-center">
+            {/* Hero Section - fullscreen */}
+            <section className="relative min-h-[calc(100vh-4rem)] flex items-center">
+                <div className="max-w-screen-xl mx-auto px-6 md:px-8 lg:px-10 text-center w-full">
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight mb-8">
                         Cashback que<br />
                         <span className="text-blue-600">genera impacto</span>

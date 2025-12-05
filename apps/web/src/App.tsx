@@ -12,6 +12,7 @@ import ProfilePage from './pages/profile/ProfilePage'
 import StoresPage from './pages/stores/StoresPage'
 import HomePage from './pages/home/HomePage'
 import CauseDetailPage from './pages/causes/CauseDetailPage'
+import CausesListPage from './pages/causes/CausesListPage'
 import PublicLayout from './layouts/PublicLayout'
 import ScrollToTop from './components/ScrollToTop'
 
@@ -31,6 +32,8 @@ export default function App() {
                     <Route path="/for-teams" element={<ForTeamsPage />} />
                     <Route path="/for-business" element={<ForBusinessPage />} />
                     <Route path="/for-merchants" element={<ForBusinessPage />} />
+                    <Route path="/causas" element={<CausesListPage />} />
+                    <Route path="/causas/:slug" element={<CauseDetailPage />} />
                 </Route>
 
                 {/* Private app with private header */}
