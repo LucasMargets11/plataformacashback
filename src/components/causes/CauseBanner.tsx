@@ -1,0 +1,45 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '../ui/Button'
+import type { Cause } from '../../lib/api'
+
+type Props = { cause: Cause }
+
+const CauseBanner: React.FC<Props> = ({ cause }) => {
+  const navigate = useNavigate()
+
+  const goDetail = () => navigate(`/app/causes/${cause.slug}`)
+  const goStores = () => navigate(`/app/stores?cause=${cause.slug}`)
+
+  return (
+    <div className="group relative w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-50" style={{ aspectRatio: '21 / 9' }}>
+      {cause.image_url ? (
+        <img
+          src={cause.image_url}
+          alt={`Banner de la causa ${cause.name}`}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-500">Sin imagen</div>
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+        <h3 className="text-lg md:text-2xl font-semibold text-white">{cause.name}</h3>
+        {cause.description && (
+          <p className="mt-1 max-w-3xl text-xs md:text-sm text-white/90 line-clamp-2" style={{display:'-webkit-box', WebkitLineClamp:2 as any, WebkitBoxOrient:'vertical' as any, overflow:'hidden'}}>
+            {cause.description}
+          </p>
+        )}
+        {/* CTAs: aparecen con hover sin mover layout. Visibles en mobile por accesibilidad */}
+        <div className="mt-3 flex gap-2 transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
+          <Button onClick={goDetail} aria-label={`Ver causa ${cause.name}`}>Ver causa</Button>
+          <Button variant="secondary" onClick={goStores} aria-label={`Ver comercios asociados a ${cause.name}`}>Comercios asociados</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CauseBanner
