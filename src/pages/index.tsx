@@ -145,13 +145,13 @@ export default function IndexPage() {
                         {steps.map((step, index) => (
                             <div
                                 key={index}
-                                className="text-center p-6 md:p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-lg transition-all duration-200"
+                                className="text-center p-6 md:p-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white transition-shadow duration-200 shadow-sm hover:shadow-lg"
                             >
-                                <div className="text-6xl mb-6"><step.icon /></div>
-                                <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 leading-[1.25]">
+                                <div className="text-6xl mb-6 text-white"><step.icon /></div>
+                                <h3 className="text-xl md:text-2xl font-semibold text-white mb-4 leading-[1.25]">
                                     {step.title}
                                 </h3>
-                                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+                                <p className="text-base md:text-lg text-white/90 leading-relaxed">
                                     {step.desc}
                                 </p>
                             </div>
