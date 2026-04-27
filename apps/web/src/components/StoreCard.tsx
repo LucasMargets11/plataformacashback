@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card } from './ui/Card'
 import { Button } from './ui/Button'
 import CategoryNotice from './CategoryNotice'
@@ -8,6 +9,14 @@ export type Category = {
   name: string
   slug: string
   participates_in_cashback: boolean
+}
+
+export type StoreSupportedCause = {
+  cause_id: number
+  title: string
+  slug: string
+  category: string
+  added_at: string
 }
 
 export type StoreItem = {
@@ -21,9 +30,13 @@ export type StoreItem = {
   categories: Category[]
   has_excluded_categories?: boolean
   excluded_categories?: string[]
+  supported_causes?: StoreSupportedCause[]
 }
 
 const StoreCard: React.FC<{ store: StoreItem }> = ({ store }) => {
+  const causes = store.supported_causes ?? []
+  const navigate = useNavigate()
+
   return (
     <Card className="flex flex-col p-0 overflow-hidden">
       {/* Cover */}
@@ -41,7 +54,7 @@ const StoreCard: React.FC<{ store: StoreItem }> = ({ store }) => {
           <h3 className="text-base font-semibold text-gray-900">{store.display_name}</h3>
         </div>
         {store.description && (
-          <p className="mt-2 text-sm text-gray-700 line-clamp-2" style={{display:'-webkit-box', WebkitLineClamp:2 as any, WebkitBoxOrient:'vertical' as any, overflow:'hidden'}}>
+          <p className="mt-2 text-sm text-gray-700 line-clamp-2" style={{ display: '-webkit-box', WebkitLineClamp: 2 as any, WebkitBoxOrient: 'vertical' as any, overflow: 'hidden' }}>
             {store.description}
           </p>
         )}
@@ -54,6 +67,24 @@ const StoreCard: React.FC<{ store: StoreItem }> = ({ store }) => {
           ))}
         </div>
 
+        {/* Supported causes */}
+        {causes.length > 0 ? (
+          <div className="mt-3">
+            <p className="text-xs font-medium text-gray-500 mb-1">Causas que apoya</p>
+            <div className="flex flex-wrap gap-1">
+              {causes.map(c => (
+                <span key={c.cause_id} className="inline-block rounded-full bg-green-50 border border-green-200 text-green-800 px-2 py-0.5 text-xs">
+                  {c.title}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3">
+            <p className="text-xs text-gray-400 italic">Sin causas asignadas</p>
+          </div>
+        )}
+
         {/* Local notice */}
         {store.has_excluded_categories && store.excluded_categories && store.excluded_categories.length > 0 && (
           <div className="mt-3">
@@ -62,9 +93,12 @@ const StoreCard: React.FC<{ store: StoreItem }> = ({ store }) => {
         )}
 
         <div className="mt-4 flex gap-2">
+          <Button className="h-9 px-3 text-sm" onClick={() => navigate(`/app/stores/${store.id}`)}>
+            Registrar compra
+          </Button>
           {store.website_url && (
             <a href={store.website_url} target="_blank" rel="noopener noreferrer">
-              <Button className="h-9 px-3 text-sm">Sitio</Button>
+              <Button variant="secondary" className="h-9 px-3 text-sm">Sitio</Button>
             </a>
           )}
           {store.instagram_url && (

@@ -2,7 +2,7 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN npm ci || npm install
+RUN npm ci --omit=optional || npm install --omit=optional
 
 FROM node:20-alpine AS dev
 WORKDIR /app

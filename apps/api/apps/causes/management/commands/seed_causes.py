@@ -9,7 +9,6 @@ SAMPLE = [
         "category": "Educación",
         "summary": "Apoyá a estudiantes de bajos recursos con becas y materiales.",
         "image_url": "https://dummyimage.com/800x450/1f2937/ffffff&text=Becas",
-        "cashback_percent": 5.0,
         "is_featured": True,
     },
     {
@@ -17,7 +16,6 @@ SAMPLE = [
         "category": "Salud",
         "summary": "Atención médica gratuita para familias vulnerables.",
         "image_url": "https://dummyimage.com/800x450/0f172a/ffffff&text=Cl%C3%ADnica",
-        "cashback_percent": 4.0,
         "is_featured": True,
     },
     {
@@ -25,7 +23,6 @@ SAMPLE = [
         "category": "Ambiente",
         "summary": "Plantamos árboles para mejorar la calidad del aire en la ciudad.",
         "image_url": "https://dummyimage.com/800x450/111827/ffffff&text=Reforestaci%C3%B3n",
-        "cashback_percent": 6.0,
         "is_featured": True,
     },
     {
@@ -33,7 +30,6 @@ SAMPLE = [
         "category": "Ambiente",
         "summary": "Rescate, cuidado y adopción responsable de animales.",
         "image_url": "https://dummyimage.com/800x450/334155/ffffff&text=Refugio",
-        "cashback_percent": 3.0,
         "is_featured": True,
     },
     {
@@ -41,7 +37,6 @@ SAMPLE = [
         "category": "Deporte",
         "summary": "Acceso al deporte para niños y jóvenes de barrios populares.",
         "image_url": "https://dummyimage.com/800x450/0b2447/ffffff&text=Deporte",
-        "cashback_percent": 5.0,
         "is_featured": True,
     },
     {
@@ -49,7 +44,6 @@ SAMPLE = [
         "category": "Educación",
         "summary": "Equipamos escuelas con tecnología y capacitación docente.",
         "image_url": "https://dummyimage.com/800x450/133b5c/ffffff&text=Aulas",
-        "cashback_percent": 4.5,
         "is_featured": True,
     },
     {
@@ -57,7 +51,6 @@ SAMPLE = [
         "category": "Salud",
         "summary": "Distribuimos alimentos y reducimos el desperdicio.",
         "image_url": "https://dummyimage.com/800x450/1e293b/ffffff&text=Alimentos",
-        "cashback_percent": 3.5,
         "is_featured": False,
     },
     {
@@ -65,7 +58,6 @@ SAMPLE = [
         "category": "Ambiente",
         "summary": "Instalación de paneles solares para reducir costos y emisiones.",
         "image_url": "https://dummyimage.com/800x450/0f172a/ffffff&text=Energ%C3%ADa+Solar",
-        "cashback_percent": 6.0,
         "is_featured": False,
     },
 ]

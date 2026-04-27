@@ -10,11 +10,25 @@ import HowItWorksPage from './pages/how-it-works'
 import AppLayout from './layouts/AppLayout'
 import ProfilePage from './pages/profile/ProfilePage'
 import StoresPage from './pages/stores/StoresPage'
+import StoreDetailPage from './pages/stores/StoreDetailPage'
 import HomePage from './pages/home/HomePage'
 import CauseDetailPage from './pages/causes/CauseDetailPage'
 import CausesListPage from './pages/causes/CausesListPage'
+import MyCausesPage from './pages/causes/MyCausesPage'
+import MyPurchasesPage from './pages/purchases/MyPurchasesPage'
+import PendingPurchasesPage from './pages/merchant/PendingPurchasesPage'
 import PublicLayout from './layouts/PublicLayout'
 import ScrollToTop from './components/ScrollToTop'
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminMerchantsPage from './pages/admin/AdminMerchantsPage'
+import AdminMerchantNewPage from './pages/admin/AdminMerchantNewPage'
+import AdminStoresPage from './pages/admin/AdminStoresPage'
+import AdminStoreNewPage from './pages/admin/AdminStoreNewPage'
+import AdminStoreCausesPage from './pages/admin/AdminStoreCausesPage'
+import AdminCampaignsPage from './pages/admin/AdminCampaignsPage'
+import AdminCampaignFormPage from './pages/admin/AdminCampaignNewPage'
+import AdminCausesPage from './pages/admin/AdminCausesPage'
+import AdminCauseFormPage from './pages/admin/AdminCauseFormPage'
 
 export default function App() {
     return (
@@ -43,10 +57,26 @@ export default function App() {
                     <Route path="dashboard" element={<ProfilePage />} />
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="stores" element={<StoresPage />} />
+                    <Route path="stores/:id" element={<StoreDetailPage />} />
+                    <Route path="purchases" element={<MyPurchasesPage />} />
+                    <Route path="merchant/purchases" element={<PendingPurchasesPage />} />
                     <Route path="causes/:slug" element={<CauseDetailPage />} />
-                    {/* Placeholders for future */}
-                    <Route path="causes" element={<div className="p-6">My Causes (próximamente)</div>} />
+                    <Route path="causes" element={<MyCausesPage />} />
                     <Route path="settings" element={<div className="p-6">Settings (próximamente)</div>} />
+                    <Route path="admin" element={<AdminLayout />}>
+                        <Route index element={<Navigate to="merchants" replace />} />
+                        <Route path="merchants" element={<AdminMerchantsPage />} />
+                        <Route path="merchants/new" element={<AdminMerchantNewPage />} />
+                        <Route path="stores" element={<AdminStoresPage />} />
+                        <Route path="stores/new" element={<AdminStoreNewPage />} />
+                        <Route path="stores/:id/causes" element={<AdminStoreCausesPage />} />
+                        <Route path="campaigns" element={<AdminCampaignsPage />} />
+                        <Route path="campaigns/new" element={<AdminCampaignFormPage />} />
+                        <Route path="campaigns/:id/edit" element={<AdminCampaignFormPage />} />
+                        <Route path="causes" element={<AdminCausesPage />} />
+                        <Route path="causes/new" element={<AdminCauseFormPage />} />
+                        <Route path="causes/:slug/edit" element={<AdminCauseFormPage />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

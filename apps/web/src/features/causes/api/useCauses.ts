@@ -1,14 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { env } from '../../../lib/env'
-
-export type CauseItem = {
-  id: number
-  title: string
-  slug: string
-  category: string
-  summary?: string
-  image_url?: string
-}
+import { fetchCauses, type ApiCause } from '../../../lib/api'
 
 export type CausesQuery = {
   search?: string
@@ -18,7 +9,7 @@ export type CausesQuery = {
 }
 
 export function useCauses(params: CausesQuery) {
-  const [data, setData] = useState<CauseItem[]>([])
+  const [data, setData] = useState<ApiCause[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -28,32 +19,28 @@ export function useCauses(params: CausesQuery) {
     if (params.category) q.set('category', params.category)
     if (params.ordering) q.set('ordering', params.ordering)
     if (params.limit) q.set('limit', String(params.limit))
-    return q.toString()
+    return q
   }, [params.search, params.category, params.ordering, params.limit])
 
   useEffect(() => {
-    const controller = new AbortController()
-    const fetchData = async () => {
+    let cancelled = false
+    async function load() {
       try {
         setLoading(true)
         setError(null)
-        const base = env.apiUrl || 'http://localhost:8000'
-        const url = `${base}/api/causes/${query ? `?${query}` : ''}`
-        const res = await fetch(url, { signal: controller.signal })
-        if (!res.ok) throw new Error(`Error ${res.status}`)
-        const json = await res.json()
-        setData(json)
+        const json = await fetchCauses(query)
+        if (!cancelled) setData(json)
       } catch (e: any) {
-        if (e.name === 'AbortError') return
-        setError('No se pudieron cargar las causas. Intentá de nuevo más tarde.')
-        // fallback mínima para no dejar vacío
-        setData([])
+        if (!cancelled) {
+          setError('No se pudieron cargar las causas. Intentá de nuevo más tarde.')
+          setData([])
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
-    fetchData()
-    return () => controller.abort()
+    load()
+    return () => { cancelled = true }
   }, [query])
 
   return { data, loading, error }

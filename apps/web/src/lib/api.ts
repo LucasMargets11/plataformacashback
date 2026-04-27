@@ -46,10 +46,28 @@ export function post<T>(path: string, body?: any): Promise<T> {
   return request<T>(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined })
 }
 
-// Catalog helpers (map to existing backend endpoints)
+export function patch<T>(path: string, body?: any): Promise<T> {
+  return request<T>(path, { method: 'PATCH', body: body ? JSON.stringify(body) : undefined })
+}
+
+export function del<T = void>(path: string): Promise<T> {
+  return request<T>(path, { method: 'DELETE' })
+}
+
+// ── Commerce ─────────────────────────────────────────────────────────
 export type ApiCategory = { id: number; name: string; slug: string; participates_in_cashback: boolean }
+
+export type ApiStoreSupportedCause = {
+  cause_id: number
+  title: string
+  slug: string
+  category: string
+  added_at: string
+}
+
 export type ApiStore = {
   id: number
+  merchant: number
   display_name: string
   address?: string
   qrcode_slug: string
@@ -61,6 +79,7 @@ export type ApiStore = {
   categories: ApiCategory[]
   has_excluded_categories: boolean
   excluded_categories: string[]
+  supported_causes: ApiStoreSupportedCause[]
 }
 
 export async function fetchCategories(): Promise<ApiCategory[]> {
@@ -72,96 +91,262 @@ export async function fetchStores(params?: URLSearchParams): Promise<ApiStore[]>
   return get<ApiStore[]>(`/api/commerce/stores/${qs}`)
 }
 
-// Profile helpers (mocked until real API is available)
-export type ProfileSummary = {
-  total_donado: number
-  causas_count: number
-  ordenes_count: number
-  porcentaje_promedio: number
+export async function fetchStore(id: number): Promise<ApiStore> {
+  return get<ApiStore>(`/api/commerce/stores/${id}/`)
 }
 
-export async function getProfileSummary(): Promise<ProfileSummary> {
-  // TODO: wire real API: GET /api/v1/profile/summary
-  // Mock predictable values
-  return Promise.resolve({
-    total_donado: 123.45,
-    causas_count: 4,
-    ordenes_count: 17,
-    porcentaje_promedio: 6.2,
-  })
+export async function fetchStoreCauses(storeId: number): Promise<ApiStoreSupportedCause[]> {
+  return get<ApiStoreSupportedCause[]>(`/api/commerce/stores/${storeId}/causes/`)
 }
 
-export type DonationItem = {
-  id: string
-  fecha: string
-  comercio: string
-  causa: string
-  monto_compra: number
-  porcentaje: number
-  donado: number
+// ── Purchases ────────────────────────────────────────────────────────
+export type ApiPurchase = {
+  id: number
+  user: number
+  store: number
+  store_name: string
+  amount: string
+  source: 'QR' | 'LINK' | 'RECEIPT'
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  selected_cause: number | null
+  cause_title: string | null
+  created_at: string
 }
 
-export async function getDonations(filters: { from?: string; to?: string; cause?: string }): Promise<DonationItem[]> {
-  // TODO: wire real API: GET /api/v1/profile/donations?from&to&cause
-  // Mock a small recent set
-  const sample: DonationItem[] = [
-    { id: '1', fecha: new Date().toISOString(), comercio: 'Sucursal Centro', causa: 'Educación', monto_compra: 120, porcentaje: 5, donado: 6 },
-    { id: '2', fecha: new Date(Date.now()-86400000).toISOString(), comercio: 'Sucursal Norte', causa: 'Salud', monto_compra: 80, porcentaje: 4, donado: 3.2 },
-    { id: '3', fecha: new Date(Date.now()-2*86400000).toISOString(), comercio: 'Sucursal Centro', causa: 'Ambiente', monto_compra: 200, porcentaje: 5, donado: 10 },
-  ]
-  return Promise.resolve(sample)
+export function createPurchase(data: {
+  store: number
+  amount: string
+  source: string
+  selected_cause?: number | null
+}): Promise<ApiPurchase> {
+  return post<ApiPurchase>('/api/cashback/purchases/', data)
 }
 
-// Causes catalog
-export type CauseCategory = { id: number; name: string; slug: string }
-export type Cause = {
+export function fetchPurchases(): Promise<ApiPurchase[]> {
+  return get<ApiPurchase[]>('/api/cashback/purchases/')
+}
+
+export type ApiApproveResponse = {
+  detail: string
+  cashback_generated: boolean
+  cashback_total?: string
+  transactions_count?: number
+  cause?: string | null
+}
+
+export function approvePurchase(id: number): Promise<ApiApproveResponse> {
+  return post<ApiApproveResponse>(`/api/cashback/purchases/${id}/approve/`)
+}
+
+// ── Profile (real) ───────────────────────────────────────────────────
+export type ApiProfile = {
+  id: number
+  email: string
+  username: string
+  first_name: string
+  last_name: string
+  role: string
+  total_donated: string
+  causes_count: number
+  purchases_count: number
+}
+
+export function getProfile(): Promise<ApiProfile> {
+  return get<ApiProfile>('/api/profile/')
+}
+
+export function patchProfile(data: Partial<Pick<ApiProfile, 'username' | 'first_name' | 'last_name'>>): Promise<ApiProfile> {
+  return patch<ApiProfile>('/api/profile/', data)
+}
+
+// ── Donations (real) ─────────────────────────────────────────────────
+export type ApiDonation = {
+  id: number
+  cause_title: string
+  cause_slug: string | null
+  amount: string
+  percentage: string
+  status: string
+  store_name: string
+  purchase_amount: string
+  created_at: string
+}
+
+export function getProfileDonations(): Promise<ApiDonation[]> {
+  return get<ApiDonation[]>('/api/profile/donations/')
+}
+
+// ── Causes (real) ────────────────────────────────────────────────────
+export type ApiCause = {
+  id: number
+  title: string
+  slug: string
+  category: string
+  summary: string
+  image_url: string
+  is_featured: boolean
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export async function fetchCauses(params?: URLSearchParams): Promise<ApiCause[]> {
+  const qs = params && params.toString() ? `?${params.toString()}` : ''
+  return get<ApiCause[]>(`/api/causes/${qs}`)
+}
+
+export function fetchCauseBySlug(slug: string): Promise<ApiCause> {
+  return get<ApiCause>(`/api/causes/${slug}/`)
+}
+
+export async function fetchFeaturedCauses(limit = 6): Promise<ApiCause[]> {
+  return get<ApiCause[]>(`/api/causes/?is_featured=true&limit=${limit}`)
+}
+
+// ── Admin ────────────────────────────────────────────────────────────
+export type ApiUser = {
+  id: number
+  email: string
+  username: string
+  role: string
+}
+
+export type ApiMerchant = {
+  id: number
+  owner: number
+  name: string
+  cuit: string
+  status: string
+}
+
+export type ApiCampaignStore = {
+  id: number
+  store: number
+  store_name: string
+  cashback_percentage: string | null
+  effective_percentage: string
+}
+
+export type ApiCampaign = {
   id: number
   name: string
-  slug: string
+  cause: number
+  cause_title: string
+  percentage: string
+  starts_at: string
+  ends_at: string
+  active: boolean
+  campaign_stores: ApiCampaignStore[]
+}
+
+export function fetchUsers(role?: string): Promise<ApiUser[]> {
+  const qs = role ? `?role=${role}` : ''
+  return get<ApiUser[]>(`/api/admin/users/${qs}`)
+}
+
+export type ApiUserCreateResponse = ApiUser & {
+  merchant?: { id: number; name: string; cuit: string }
+}
+
+export function createUser(data: {
+  email: string
+  password: string
+  role: string
+  merchant_name?: string
+  merchant_cuit?: string
+}): Promise<ApiUserCreateResponse> {
+  return post<ApiUserCreateResponse>('/api/admin/users/', data)
+}
+
+export function fetchMerchants(): Promise<ApiMerchant[]> {
+  return get<ApiMerchant[]>('/api/commerce/merchants/')
+}
+
+export function createMerchant(data: { name: string; cuit: string; owner: number }): Promise<ApiMerchant> {
+  return post<ApiMerchant>('/api/commerce/merchants/', data)
+}
+
+export function createStore(data: {
+  merchant: number
+  display_name: string
+  address?: string
+  qrcode_slug: string
   description?: string
+  logo_url?: string
+  website_url?: string
+  instagram_url?: string
+}): Promise<ApiStore> {
+  return post<ApiStore>('/api/commerce/stores/', data)
+}
+
+export function addStoreCause(storeId: number, causeId: number): Promise<ApiStoreSupportedCause> {
+  return post<ApiStoreSupportedCause>(`/api/commerce/stores/${storeId}/causes/`, { cause: causeId })
+}
+
+export function removeStoreCause(storeId: number, causeId: number): Promise<void> {
+  return del(`/api/commerce/stores/${storeId}/causes/${causeId}/`)
+}
+
+export function fetchCampaigns(): Promise<ApiCampaign[]> {
+  return get<ApiCampaign[]>('/api/cashback/campaigns/')
+}
+
+export function fetchCampaign(id: number): Promise<ApiCampaign> {
+  return get<ApiCampaign>(`/api/cashback/campaigns/${id}/`)
+}
+
+export function createCampaign(data: {
+  name: string
+  cause: number
+  store_ids: number[]
+  percentage: string
+  starts_at: string
+  ends_at: string
+  active: boolean
+}): Promise<ApiCampaign> {
+  return post<ApiCampaign>('/api/cashback/campaigns/', data)
+}
+
+export function updateCampaign(id: number, data: {
+  name: string
+  cause: number
+  store_ids: number[]
+  percentage: string
+  starts_at: string
+  ends_at: string
+  active: boolean
+}): Promise<ApiCampaign> {
+  return patch<ApiCampaign>(`/api/cashback/campaigns/${id}/`, data)
+}
+
+export function deleteCampaign(id: number): Promise<void> {
+  return del(`/api/cashback/campaigns/${id}/`)
+}
+
+// ── Causes CRUD (admin) ─────────────────────────────────────────────
+export function createCause(data: {
+  title: string
+  category: string
+  summary?: string
   image_url?: string
-  featured?: boolean
-  goal_amount?: number
-  donated_amount?: number
+  is_active?: boolean
+  is_featured?: boolean
+}): Promise<ApiCause> {
+  return post<ApiCause>('/api/causes/', data)
 }
 
-export async function getCauseCategories(): Promise<CauseCategory[]> {
-  // TODO: wire real API: GET /api/v1/cause-categories/
-  return Promise.resolve([
-    { id: 1, name: 'Educación', slug: 'educacion' },
-    { id: 2, name: 'Salud', slug: 'salud' },
-    { id: 3, name: 'Ambiente', slug: 'ambiente' },
-  ])
+export function updateCause(slug: string, data: Partial<{
+  title: string
+  category: string
+  summary: string
+  image_url: string
+  is_active: boolean
+  is_featured: boolean
+}>): Promise<ApiCause> {
+  return patch<ApiCause>(`/api/causes/${slug}/`, data)
 }
 
-export async function getCauses(params?: URLSearchParams): Promise<Cause[]> {
-  // TODO: wire real API: GET /api/v1/causes/?search=&category=&ordering=
-  // Simulate filters locally for now
-  const data: Cause[] = [
-    { id: 1, name: 'Becas Escolares', slug: 'becas-escolares', description: 'Apoya a estudiantes de bajos recursos', image_url: 'https://dummyimage.com/800x450/1f2937/ffffff&text=Becas', featured: true, goal_amount: 5000, donated_amount: 1200 },
-    { id: 2, name: 'Clínica Comunitaria', slug: 'clinica-comunitaria', description: 'Atención médica gratuita', image_url: 'https://dummyimage.com/800x450/0f172a/ffffff&text=Clínica', featured: true, goal_amount: 10000, donated_amount: 4300 },
-    { id: 3, name: 'Reforestación Urbana', slug: 'reforestacion-urbana', description: 'Más árboles en tu ciudad', image_url: 'https://dummyimage.com/800x450/111827/ffffff&text=Reforestación', featured: false, goal_amount: 8000, donated_amount: 2100 },
-    { id: 4, name: 'Refugio Animal', slug: 'refugio-animal', description: 'Protección y adopción', image_url: 'https://dummyimage.com/800x450/334155/ffffff&text=Refugio', featured: false, goal_amount: 6000, donated_amount: 1500 },
-  ]
-  if (!params) return Promise.resolve(data)
-  const q = new URLSearchParams(params)
-  let out = data
-  const search = q.get('search')?.toLowerCase()
-  if (search) out = out.filter(c => c.name.toLowerCase().includes(search) || c.description?.toLowerCase().includes(search))
-  const category = q.get('category')
-  if (category) {
-    // Mock: filter by name includes category keyword
-    out = out.filter(c => c.description?.toLowerCase().includes(category) || c.name.toLowerCase().includes(category))
-  }
-  const ordering = q.get('ordering')
-  if (ordering === 'A-Z') out = [...out].sort((a,b)=>a.name.localeCompare(b.name))
-  if (ordering === 'Más apoyo') out = [...out].sort((a,b)=>(b.donated_amount||0)-(a.donated_amount||0))
-  if (ordering === 'Destacadas') out = [...out].sort((a,b)=>Number(b.featured)-Number(a.featured))
-  return Promise.resolve(out)
+export function deleteCause(slug: string): Promise<void> {
+  return del(`/api/causes/${slug}/`)
 }
 
-export async function getFeaturedCauses(): Promise<Cause[]> {
-  // TODO: wire real API: GET /api/v1/causes/featured/
-  const all = await getCauses()
-  return all.filter(c => c.featured)
-}

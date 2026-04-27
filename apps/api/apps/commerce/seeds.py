@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 from django.contrib.auth import get_user_model
-from .models import Merchant, Store, Category
+from .models import Merchant, Store, Category, StoreSupportedCause
 
 User = get_user_model()
 
@@ -47,3 +47,13 @@ def seed():
         },
     )
     s2.categories.set([cat_electro, cat_envios])
+
+    # Supported causes — link stores to existing causes
+    from apps.causes.models import Cause
+
+    causes = list(Cause.objects.filter(is_active=True)[:3])
+    if causes:
+        # s1 supports first two causes, s2 supports last one
+        for cause in causes[:2]:
+            StoreSupportedCause.objects.get_or_create(store=s1, cause=cause)
+        StoreSupportedCause.objects.get_or_create(store=s2, cause=causes[-1])

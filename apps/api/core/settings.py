@@ -62,7 +62,7 @@ else:
             "ENGINE": "django.db.backends.postgresql",
             "NAME": os.getenv("POSTGRES_DB", "cashback"),
             "USER": os.getenv("POSTGRES_USER", "postgres"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "margets999"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
             "HOST": os.getenv("POSTGRES_HOST", "localhost"),
             "PORT": os.getenv("POSTGRES_PORT", "5432"),
         }
@@ -94,9 +94,7 @@ if DEBUG and not CORS_ALLOWED_ORIGINS:
     ]
 
 # Si necesitás CSRF para vistas con sesión, confiá explícitamente en el origen del dev server
-CSRF_TRUSTED_ORIGINS = [
-    o.replace("http://", "http://") for o in CORS_ALLOWED_ORIGINS
-] + [
+CSRF_TRUSTED_ORIGINS = list(CORS_ALLOWED_ORIGINS) + [
     o.replace("http://", "https://") for o in CORS_ALLOWED_ORIGINS
 ]
 

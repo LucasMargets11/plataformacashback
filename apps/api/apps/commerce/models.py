@@ -38,3 +38,15 @@ class Store(models.Model):
 
     def __str__(self) -> str:
         return f"{self.display_name}"
+
+
+class StoreSupportedCause(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="supported_causes")
+    cause = models.ForeignKey("causes.Cause", on_delete=models.CASCADE, related_name="supporting_stores")
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("store", "cause")
+
+    def __str__(self) -> str:
+        return f"{self.store.display_name} → {self.cause.title}"

@@ -1,20 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { getCauseCategories, getCauses, getFeaturedCauses, type Cause, type CauseCategory } from '../../lib/api'
+import { fetchCauses, fetchFeaturedCauses, type ApiCause } from '../../lib/api'
 import CauseBanner from '../../components/causes/CauseBanner'
 import CauseCard from '../../components/causes/CauseCard'
+
+const CATEGORIES = ['Educación', 'Salud', 'Ambiente', 'Deporte']
 
 export default function HomePage() {
   const [params, setParams] = useSearchParams()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [categories, setCategories] = useState<CauseCategory[]>([])
-  const [featured, setFeatured] = useState<Cause[]>([])
-  const [causes, setCauses] = useState<Cause[]>([])
+  const [featured, setFeatured] = useState<ApiCause[]>([])
+  const [causes, setCauses] = useState<ApiCause[]>([])
 
   const [search, setSearch] = useState(params.get('search') || '')
   const [category, setCategory] = useState(params.get('category') || '')
-  const [ordering, setOrdering] = useState(params.get('ordering') || 'Destacadas')
+  const [ordering, setOrdering] = useState(params.get('ordering') || '-updated_at')
   const [openFilters, setOpenFilters] = useState(false)
 
   useEffect(() => {
@@ -23,19 +24,14 @@ export default function HomePage() {
       setLoading(true)
       setError(null)
       try {
-        const [cats, feats] = await Promise.all([
-          getCauseCategories(),
-          getFeaturedCauses(),
-        ])
-        if (!cancelled) {
-          setCategories(cats)
-          setFeatured(feats)
-        }
+        const feats = await fetchFeaturedCauses()
+        if (!cancelled) setFeatured(feats)
+
         const q = new URLSearchParams()
         if (search) q.set('search', search)
         if (category) q.set('category', category)
         if (ordering) q.set('ordering', ordering)
-        const list = await getCauses(q)
+        const list = await fetchCauses(q)
         if (!cancelled) setCauses(list)
       } catch (e: any) {
         if (!cancelled) setError(e?.message || 'Error al cargar causas')
@@ -109,7 +105,7 @@ export default function HomePage() {
             </div>
             {/* Grid skeletons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-pulse">
-              {[...Array(8)].map((_,i)=>(<div key={i} className="h-40 rounded-lg bg-gray-100" />))}
+              {[...Array(8)].map((_, i) => (<div key={i} className="h-40 rounded-lg bg-gray-100" />))}
             </div>
           </>
         )}
@@ -168,8 +164,8 @@ export default function HomePage() {
                   aria-label="Filtrar por categoría"
                 >
                   <option value="">Todas</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={String(c.slug)}>{c.name}</option>
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
               </div>
@@ -181,9 +177,9 @@ export default function HomePage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white"
                   aria-label="Ordenar causas"
                 >
-                  <option value="Destacadas">Destacadas</option>
-                  <option value="Más apoyo">Más apoyo</option>
-                  <option value="A-Z">A-Z</option>
+                  <option value="-updated_at">Recientes</option>
+                  <option value="title">A-Z</option>
+                  <option value="-is_featured">Destacadas</option>
                 </select>
               </div>
               <div className="pt-2">

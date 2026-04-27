@@ -8,6 +8,7 @@ class CustomUser(AbstractUser):
         MERCHANT = "MERCHANT", "Merchant"
         ADMIN = "ADMIN", "Admin"
 
+    email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.CONSUMER)
 
     def __str__(self) -> str:

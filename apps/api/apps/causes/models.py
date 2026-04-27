@@ -15,7 +15,6 @@ class Cause(models.Model):
     category = models.CharField(max_length=32, choices=CATEGORY_CHOICES, default="Educación")
     summary = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
-    cashback_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

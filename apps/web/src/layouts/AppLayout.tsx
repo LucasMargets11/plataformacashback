@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { isAuthenticated, clearTokens, getAccessToken } from '../lib/auth'
+import { getRole } from '../lib/role'
 
 export default function AppLayout() {
   const navigate = useNavigate()
@@ -25,7 +26,16 @@ export default function AppLayout() {
       const payload = JSON.parse(atob(token.split('.')[1]))
       email = payload?.email || payload?.username || null
     }
-  } catch {}
+  } catch { }
+
+  const role = getRole()
+  const isMerchantOrAdmin = role === 'MERCHANT' || role === 'ADMIN'
+  const isAdmin = role === 'ADMIN'
+
+  const navCls = ({ isActive }: { isActive: boolean }) =>
+    `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`
+  const mobileNavCls = ({ isActive }: { isActive: boolean }) =>
+    isActive ? 'font-semibold text-gray-900' : 'text-gray-600'
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -33,11 +43,16 @@ export default function AppLayout() {
         <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-6 md:px-8 lg:px-10">
           <Link to="/" className="text-xl font-bold text-gray-900 hover:text-blue-600">Cashback</Link>
           <nav className="hidden md:flex items-center gap-6">
-            <NavLink to="/app/home" className={({isActive}) => `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}>Inicio</NavLink>
-            <NavLink to="/app/dashboard" className={({isActive}) => `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}>Dashboard</NavLink>
-            <NavLink to="/app/stores" className={({isActive}) => `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}>Stores</NavLink>
-            <NavLink to="/app/causes" className={({isActive}) => `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}>My Causes</NavLink>
-            <NavLink to="/app/settings" className={({isActive}) => `text-sm ${isActive ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}>Settings</NavLink>
+            <NavLink to="/app/home" className={navCls}>Inicio</NavLink>
+            <NavLink to="/app/dashboard" className={navCls}>Dashboard</NavLink>
+            <NavLink to="/app/stores" className={navCls}>Tiendas</NavLink>
+            {isMerchantOrAdmin ? (
+              <NavLink to="/app/merchant/purchases" className={navCls}>Pendientes</NavLink>
+            ) : (
+              <NavLink to="/app/purchases" className={navCls}>Mis Compras</NavLink>
+            )}
+            <NavLink to="/app/causes" className={navCls}>Mi Impacto</NavLink>
+            {isAdmin && <NavLink to="/app/admin" className={navCls}>Admin</NavLink>}
           </nav>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 text-sm text-gray-700">
@@ -51,12 +66,17 @@ export default function AppLayout() {
         </div>
         {/* Mobile nav */}
         <div className="md:hidden border-t border-gray-200">
-          <div className="mx-auto max-w-screen-xl px-6 py-2 flex items-center gap-4 text-sm">
-            <NavLink to="/app/home" className={({isActive}) => isActive ? 'font-semibold text-gray-900' : 'text-gray-600'}>Inicio</NavLink>
-            <NavLink to="/app/dashboard" className={({isActive}) => isActive ? 'font-semibold text-gray-900' : 'text-gray-600'}>Dashboard</NavLink>
-            <NavLink to="/app/stores" className={({isActive}) => isActive ? 'font-semibold text-gray-900' : 'text-gray-600'}>Stores</NavLink>
-            <NavLink to="/app/causes" className={({isActive}) => isActive ? 'font-semibold text-gray-900' : 'text-gray-600'}>My Causes</NavLink>
-            <NavLink to="/app/settings" className={({isActive}) => isActive ? 'font-semibold text-gray-900' : 'text-gray-600'}>Settings</NavLink>
+          <div className="mx-auto max-w-screen-xl px-6 py-2 flex items-center gap-4 text-sm overflow-x-auto">
+            <NavLink to="/app/home" className={mobileNavCls}>Inicio</NavLink>
+            <NavLink to="/app/dashboard" className={mobileNavCls}>Dashboard</NavLink>
+            <NavLink to="/app/stores" className={mobileNavCls}>Tiendas</NavLink>
+            {isMerchantOrAdmin ? (
+              <NavLink to="/app/merchant/purchases" className={mobileNavCls}>Pendientes</NavLink>
+            ) : (
+              <NavLink to="/app/purchases" className={mobileNavCls}>Compras</NavLink>
+            )}
+            <NavLink to="/app/causes" className={mobileNavCls}>Impacto</NavLink>
+            {isAdmin && <NavLink to="/app/admin" className={mobileNavCls}>Admin</NavLink>}
           </div>
         </div>
       </header>
